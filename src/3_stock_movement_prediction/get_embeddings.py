@@ -16,8 +16,7 @@ os.environ["TOKENIZERS_PARALLELISM"] = "false"
 class EMBEDDER:
     def __init__(self, embedder_name):
         self.embedder_name = embedder_name
-        self.root = '/data/xiaomengxi/embedding_models/'  # 03 or 05
-        # self.root = '/data1/xmx_log/embedding_models/'  # 8666
+        self.root = '/data/your_name/embedding_models/'  # change this root into yours
         if self.embedder_name == 'instructor':
             if os.path.exists(self.root + 'instructor-large'):
                 print('Loading local model ...')
@@ -40,8 +39,12 @@ class EMBEDDER:
                 print('No local models, downloading ...')
                 self.model = SentenceTransformer('BAAI/llm-embedder')
         elif embedder_name == 'FinSeer':
+            if os.path.exists(self.root + 'finseer'):
+                print('Loading local model ...')
+                self.model = SentenceTransformer(self.root + 'finseer', device=args.device)
             print('No local models, downloading ...')
-            self.model = SentenceTransformer('ElsaShaw/FinSeer')
+            else:
+                self.model = SentenceTransformer('')  # complete it
         elif embedder_name == 'e5':
             if os.path.exists(self.root + 'e5-mistral-7b-instruct'):
                 print('Loading local model ...')
@@ -50,7 +53,6 @@ class EMBEDDER:
                 print('No local models, downloading ...')
                 self.model = SentenceTransformer('intfloat/e5-mistral-7b-instruct')
         elif self.embedder_name == 'uae':
-
             if os.path.exists(self.root + 'UAE-Large-V1'):
                 print('Loading local model ...')
                 self.model = AnglE.from_pretrained(self.root + 'UAE-Large-V1', pooling_strategy='cls').cuda()
